@@ -10,6 +10,27 @@ def print_receipt( receipt, total ):
         print(f"{item} (x{qty}): ${cost:.2f}")
     print(f"Total: ${total:.2f}")
 
+def get_item(menu):
+    while True:
+        item = input ("Enter item (beer, wine, cocktail) or 'done' : ")
+        
+        if item == "done" :
+            return "done"
+        
+        if item in menu:
+            return item
+        print ("item not on menu . ")
+        
+def get_quantity(item):
+    while True:
+        try:
+            qty = int(input(f"how many {item} would you like ? "))
+            if qty >0:
+                return qty
+            print (" quantity must be greater than zero . ")
+        except ValueError:
+            print ( "please enter a number.")
+
 menu = {
     "beer": 5,
     "wine": 8,
@@ -20,24 +41,17 @@ total = 0
 receipt = []
 
 while True:
-    item = input("Enter item (beer, wine, cocktail) or 'done' to finish: ")
+    item = get_item(menu)
 
-    if item == 'done':
+    if item == "done":
         break
 
-    if item not in menu:
-        print("Item not on menu. Please try again.")
-        continue
-
-    while True:
-        try:
-            qty = int(input(f"Enter quantity of {item}: "))
-            break
-        except ValueError:
-            print("Invalid quantity. Please enter a number.")
+    qty = get_quantity(item)
 
     cost = calculate_cost(qty, menu[item])
     total += cost
     receipt.append((item, qty, cost))
-
+    
 print_receipt(receipt, total)
+
+
