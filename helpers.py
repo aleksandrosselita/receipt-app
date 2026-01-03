@@ -1,3 +1,24 @@
+def save_receipt_to_file( receipt, subtotal, discount_rate, filename="receipt.txt"):
+    discount_amount = subtotal * discount_rate
+    final_total = subtotal - discount_amount
+
+    lines = []
+    lines.append ("----- Receipt -----")
+
+    for item, qty, cost in receipt:
+        lines.append(f"{item} x{qty} = ${cost:.2f}")
+
+    lines.append (f"Subtotal : ${subtotal:.2f}")
+
+    if discount_rate > 0 :
+         percent = int(discount_rate * 100)
+         lines.append (f"Discount ({percent}%): -${discount_ammount:.2f}")
+
+    lines.append(f"final total: ${final_total:.2f}")
+
+    with open(filename, "w") as f:
+        f.write("\n".join(lines) + "\n")     
+
 def handle_command(item,receipt,total,discount_rate,history,menu,):
     if item == "remove":
         history.append((receipt.copy(), total,discount_rate))
@@ -23,9 +44,20 @@ def handle_command(item,receipt,total,discount_rate,history,menu,):
         else:
             print("Nothing to undo ")
         return receipt,total,discount_rate, True
-    return receipt, total, discount_rate, False
-
-    
+    if item == "save":
+        save_receipt_to_file(receipt,total,discount_rate)
+        print("Saved to receipt.txt")
+        return receipt,total,discount_rate, True
+    if item == "help":
+        print("\nCommands:")
+        print("remove   - remove an item from receipt")
+        print("discount - apply a discount")
+        print("undo     - undo last action")
+        print("clear    - clear receipt")
+        print("save     - save receipt to receipt.txt")
+        print("done     - finish and print totals")
+        print("help     - show this message")
+    return receipt, total, discount_rate, True
 
 def get_discount_rate():
     while True:
@@ -48,6 +80,7 @@ def add_item_to_receipt(receipt, total, item, qty, price):
     receipt.append((item, qty, cost))
     total += cost
     return receipt, total
+
 def test_calculate_cost():
     print("Testing calculate_cost...")
 

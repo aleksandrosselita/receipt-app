@@ -1,3 +1,5 @@
+import os
+print(os.getcwd())
 
 from helpers import  get_discount_rate, handle_command, print_receipt, get_item, get_quantity, add_item_to_receipt, remove_item_from_receipt, apply_discount
 
@@ -16,11 +18,13 @@ discount_amount = 0
 history = []
 
 while True:
-    item = input ("Enter item , 'remove', 'discount','undo','clear' or 'done' : ")
+    COMMANDS = ["remove", "discount", "undo", "clear", "save", "done"]
+    item = input(f"Enter item or command {COMMANDS}: ")
     if item == "done":
         break
     receipt, total, discount_rate, handled = handle_command( 
-    item, receipt, total, discount_rate, history, menu
+    item, receipt, total, discount_rate, history, menu,
+
 
 )
     if handled:
