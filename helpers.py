@@ -1,3 +1,26 @@
+def read_receipt_txt(filename="receipt.txt"):
+    try:
+        with open(filename, "r") as f:
+            content = f.read()
+            print("\n ------Load file -----")
+            print(content)
+    except FileNotFoundError:
+        print("File not found")
+
+    
+    
+def write_lines_to_file(lines,filename):
+    with open(filename, "w") as f:
+        f.write("\n".join(lines) + "\n")
+
+
+def export_receipt_to_csv(receipt, filename="Receipt.csv"):
+    lines = ["item,quantity,cost"]
+    for item,qty,cost in receipt:
+        lines.append(f"{item},{qty},{cost:.2f}")
+        write_lines_to_file(lines, filename)
+
+
 def save_receipt_to_file( receipt, subtotal, discount_rate, filename="receipt.txt"):
     discount_amount = subtotal * discount_rate
     final_total = subtotal - discount_amount
@@ -20,6 +43,13 @@ def save_receipt_to_file( receipt, subtotal, discount_rate, filename="receipt.tx
         f.write("\n".join(lines) + "\n")     
 
 def handle_command(item,receipt,total,discount_rate,history,menu,):
+    if item == "load":
+        read_receipt_txt()
+        return receipt,total,discount_rate, True
+    if item == "export":
+        export_receipt_to_csv(receipt)
+        print("Exported receipt to receipt.csv")
+        return receipt,total,discount_rate, True
     if item == "remove":
         history.append((receipt.copy(), total,discount_rate))
         receipt,total = remove_item_from_receipt (receipt,total)
@@ -57,7 +87,8 @@ def handle_command(item,receipt,total,discount_rate,history,menu,):
         print("save     - save receipt to receipt.txt")
         print("done     - finish and print totals")
         print("help     - show this message")
-    return receipt, total, discount_rate, True
+    return receipt, total, discount_rate, False
+
 
 def get_discount_rate():
     while True:
